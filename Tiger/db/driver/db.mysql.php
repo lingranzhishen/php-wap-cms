@@ -15,8 +15,8 @@ class tiger_mysql extends tiger_sql{
 	function connect($host, $user, $pwd, $dbName) {
 		$this->db = mysql_connect($host, $user, $pwd, true);
 		if (!$this->db) {
-			//TODO Log
-			die("<b>Fatal Error</b>\db\Mysql::connect($host, $dbName) Failed, error NO:". mysql_errno() . ' ' . mysql_error());
+			//TODO 开发可见且log
+			die("<b>Fatal Error:</b> " . mysql_error(). "<br/><b>Error Code:</b> ". mysql_errno() . "<br/><b>Error Tip:</b> \db\Mysql::connect($host, $dbName) Failed");
 		}
 		$this->selectDB($dbName);
 	}
@@ -33,8 +33,8 @@ class tiger_mysql extends tiger_sql{
 	function execute($sql) {
 		$rs = mysql_query($sql);
 		if (!$rs) {
-			die("<b>Fatal Error</b>\db\Mysql::query($sql) Failed, error NO:". mysql_errno() . ' ' . mysql_error());
-			//TODO Log
+			//TODO 开发可见且log
+			die("<b>Fatal Error:</b> " . mysql_error(). "<br/><b>Error Code:</b> ". mysql_errno() . "<br/><b>Error Tip:</b> \db\Mysql::execute(\"$sql\") Failed");
 		}
 		$this->result = $rs;
 		return $rs;
