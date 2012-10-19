@@ -1,6 +1,6 @@
 <?
 
-require ('Tiger/Tiger.php');
+require 'Tiger/Tiger.php';
 include_once APP_PATH.'/config.php';
 
 //$a = new DB();
@@ -9,15 +9,14 @@ include_once APP_PATH.'/config.php';
 class dbtest extends DB {
 
 	function __construct() {
-		$this->config = $GLOBALS['database'];
 		parent::__construct();
 	}
 }
 
 $a = new dbtest();
+$a->connect($GLOBALS['database']['host'], $GLOBALS['database']['user'], $GLOBALS['database']['pwd'], $GLOBALS['database']['db'], $GLOBALS['database']['char']);
 
-print_r ($a->getOne("select * from tbl_match"));
-print_r ($a->getOne("select * from tbl_match"));
+print_r ($a->getOne("select now()"));
 
 $GLOBALS['_exeTime'] = microtime(true);
 echo "<br/>".($GLOBALS['_exeTime']-$GLOBALS['_loadTime']). "<br/>";

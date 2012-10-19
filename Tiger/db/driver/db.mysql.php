@@ -21,10 +21,10 @@ class tiger_mysql extends tiger_sql{
 		$this->selectDB($dbName);
 	}
 
-	function selectDB ($name) {
-		if ($name) {
-			mysql_select_db($name);
-			$this->db_name = $name;
+	function selectDB ($dbName) {
+		if ($dbName) {
+			mysql_select_db($dbName);
+			$this->db_name = $dbName;
 		} else {
 			//TODO Log
 		}
@@ -43,44 +43,71 @@ class tiger_mysql extends tiger_sql{
 	function close() {
 		mysql_close($this->db);
 	}
-	
+
 	function insertID() {
 		return mysql_insert_id();
 	}
-	
+
 	/**
-	 *
+	 * 取得结果中指定字段的字段名
 	 * @param int $offest 开始搜索的位置
-	 * @return string 
+	 * @return string
 	 */
-	function fieldName($offest = 0) {
+	protected function fieldName($offest = 0) {
 		return @mysql_field_name($this->result, $offest);
 	}
-	
+
 	/**
+     *  从结果集中取得一行作为关联数组，或数字数组，或二者兼有
 	 * @param $array_type 可选。规定返回哪种结果。可能的值：
 				MYSQL_ASSOC - 关联数组
 				MYSQL_NUM - 数字数组
 				MYSQL_BOTH - 默认。同时产生关联和数字数组
-	 * 
+	 *
 	 */
-	function fetchArray($array_type = MYSQL_BOTH) {
+	protected function fetchArray($array_type = MYSQL_BOTH) {
 		if ($this->result)
 			$row = mysql_fetch_array($this->result, $array_type);
 		if (!$row) $row = array();
 		return $row;
 	}
-	
-	function fetchRow() {
+
+	protected function fetchRow() {
 		$row = mysql_fetch_row($this->result);
 		if (!$row) $row = array();
 		return $row;
 	}
-	
+
+	protected function getRows() {
+		$rows = array();
+		while ($row = $this->fetchArray(MYSQL_ASSOC)) {
+			$rows[] = $row;
+		}
+		return $rows;
+	}
+
+	protected function getRowsX() {
+		$rows = array();
+		$fields = $this->fieldNameArray();
+		while ($row = $this->fetchRow()) {
+			$rows[] = $row;
+		}
+		return array('field'=> $fields, 'data'=> $rows);
+	}
+
+	protected function fieldNameArray() {
+		$fields = array();
+		$i = 0;
+		while ($field = $this->fieldName($i++)) {
+			$fields[] = $field;
+		}
+		return $fields;
+	}
+
 	function setCharset($char) {
 		$this->execute('set names '.$char);
 	}
-	
+
 	function setCount($sql) {
 		//本函数不能用于sql中的 union 语法
 		$sql = preg_replace('/^\s*SELECT\s.*\s+FROM\s/Uis', 'SELECT COUNT(*) FROM ', $sql);
@@ -92,24 +119,7 @@ class tiger_mysql extends tiger_sql{
 		if (!$count) $count = 0;
 		$this->count = $count;
 	}
-	
-	function getRows() {
-		$rows = array();
-		while ($row = $this->fetchArray(MYSQL_ASSOC)) {
-			$rows[] = $row;
-		}
-		return $rows;
-	}
-	
-	function getRowsX() {
-		$rows = array();
-		$fields = $this->fieldNameArray();
-		while ($row = $this->fetchRow()) {
-			$rows[] = $row;
-		}
-		return array('field'=> $fields, 'data'=> $rows);
-	}
-	
+
 	function getOne($sql) {
 		$this->execute( $sql. ' limit 1');
 		$row = $this->fetchRow();
@@ -118,27 +128,18 @@ class tiger_mysql extends tiger_sql{
 		}
 		return array_shift($row);
 	}
-	
+
 	function getArray($sql) {
 		$this->execute($sql);
 		return $this->getRows();
 	}
-	
+
 	//服务端消耗接近getArray()
 	function getArrayX($sql) {
 		$this->execute($sql);
 		return $this->getRowsX();
 	}
-	
-	function fieldNameArray() {
-		$fields = array();
-		$i = 0;
-		while ($field = $this->fieldName($i++)) {
-			$fields[] = $field;
-		}
-		return $fields;
-	}
-	
+
 	function pageArray($sql, $size, $page) {
 		if ($page > 1 && $size >1) {
 			$this->setCount($sql);
@@ -147,7 +148,7 @@ class tiger_mysql extends tiger_sql{
 			return $this->getArray($sql);
 		}
 	}
-	
+
 	function pageArrayX($sql, $size, $page) {
 		if ($page > 1 && $size >1) {
 			$this->setCount($sql);
