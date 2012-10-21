@@ -1,22 +1,17 @@
 <?
 
-require 'Tiger/Tiger.php';
-include_once APP_PATH.'/config.php';
 
-//$a = new DB();
-//echo $a->execute("select curdate()");
+include 'inc.php';
 
-class dbtest extends DB {
+header('Content-Type: text/html; charset=utf-8');
 
-	function __construct() {
-		parent::__construct();
-	}
-}
+$_lang->set("");
 
-$a = new dbtest();
-$a->connect($GLOBALS['database']['host'], $GLOBALS['database']['user'], $GLOBALS['database']['pwd'], $GLOBALS['database']['db'], $GLOBALS['database']['char']);
+echo $_lang->get("ParamMustBeArray") . "<br/>";
+
+$a = $_tiger->db();
 
 print_r ($a->getOne("select now()"));
 
-$GLOBALS['_exeTime'] = microtime(true);
-echo "<br/>".($GLOBALS['_exeTime']-$GLOBALS['_loadTime']). "<br/>";
+$_exeTime = microtime(true);
+echo "<br/>".($tiger_time_load - $tiger_time_begin). "<br/>".($_exeTime - $tiger_time_load). "<br/>";

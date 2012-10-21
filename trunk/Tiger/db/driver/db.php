@@ -5,7 +5,7 @@
  */
 
 
-abstract class tiger_sql{
+abstract class Tiger_sql{
 
 	//数据库操作实例
 	protected static $db = null;

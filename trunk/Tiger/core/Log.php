@@ -9,9 +9,7 @@ class Log {
 	private static $pattern;
 	protected static $path;
 
-	function __construct() {
-		;
-	}
+	function __construct() {}
 	
 	//前期调试错误
 	function debug() {

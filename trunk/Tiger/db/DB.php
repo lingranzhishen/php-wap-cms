@@ -14,22 +14,31 @@ require_once TIGER_PATH.'/db/driver/db.php';
  * @author    Vicky
  * @version   $Id$
  */
-class DB {
+class Tiger_db {
 
 	//数据库操作实例
 	private static $db = null;
+	private static $path = null;
 
 	function __construct($dbType = 'mysql'){
-		$this->init($dbType);
+		$this->path = dirname(__FILE__);
+		$this->_init($dbType);
 	}
 
 	function __destruct() {
 		$this->db = null;
 	}
 
-	private function init($dbType = 'mysql') {
-        $cls = 'tiger_'.$dbType;
-        require_once TIGER_PATH.'/db/driver/db.'.$dbType.'.php';
+	private function _init($dbType) {
+        $cls = 'Tiger_'.$dbType;
+		$php = $this->path.'/driver/db.'.$dbType.'.php';
+		if(file_exists($php)){
+			include_once $php;
+		}else{
+			//TODO Log 数据库操作类加载失败
+            echo "数据库没有提供此接口：$dbType";
+            exit;
+		}
         if (class_exists($cls))
             $this->db = new $cls();
         else {
