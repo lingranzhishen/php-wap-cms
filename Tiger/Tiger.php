@@ -4,7 +4,7 @@
  *
  */
 
-$GLOBALS['_beginTime'] = microtime(true);
+$tiger_time_begin = microtime(true);
 
 if(version_compare(PHP_VERSION,'5.0.0','<') ) {
     die('require PHP 5.0+ ');
@@ -19,22 +19,18 @@ if(!defined('APP_PATH')){
     define('APP_PATH', dirname($_SERVER['SCRIPT_FILENAME']));
 }
 
-/*
- * 引进系统类
- */
+//引进文件
+include 'include.php';
 
-//引进数据库类
-include TIGER_PATH.'/db/DB.php';
+//TODO 
 
-
-if(version_compare(PHP_VERSION,'5.2.0','<') ) {
-	include TIGER_PATH.'/common/compat.php';
+class Tiger extends Tiger_mountain{
+	function __construct(){
+		return Tiger_mountain::init();
+	}
 }
 
-//TODO ?
-
 // 记录加载文件时间
-$GLOBALS['_loadTime'] = microtime(true);
+$tiger_time_load = microtime(true);
 
-//echo $GLOBALS['_loadTime'] -$GLOBALS['_beginTime']."<br/>";
 

@@ -5,12 +5,10 @@
  */
 
 
-class tiger_mysql extends tiger_sql{
+class Tiger_mysql extends Tiger_sql{
 
 
-	function __construct(){
-
-	}
+	function __construct(){}
 
 	function connect($host, $user, $pwd, $dbName) {
 		$this->db = mysql_connect($host, $user, $pwd, true);
