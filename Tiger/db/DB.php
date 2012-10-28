@@ -14,7 +14,7 @@ require_once TIGER_PATH.'/db/driver/db.php';
  * @author    Vicky
  * @version   $Id$
  */
-class Tiger_db {
+class Tiger_db extends Tiger_base{
 
 	//数据库操作实例
 	private static $db = null;
@@ -35,21 +35,24 @@ class Tiger_db {
 		if(file_exists($php)){
 			include_once $php;
 		}else{
-			//TODO Log 数据库操作类加载失败
-            echo "数据库没有提供此接口：$dbType";
-            exit;
+			//TODO Log
+            // echo "数据库没有提供此接口：$dbType";
+            // exit;
+			$this->halt("DatabaseHasNoTheInterface");
 		}
         if (class_exists($cls))
             $this->db = new $cls();
         else {
-            //TODO Log 数据库操作类加载失败
-            echo '数据库操作类加载失败';
-            exit;
+            //TODO Log
+            // echo '数据库操作类加载失败';
+            // exit;
+			$this->halt("DatabaseClassFailToLoad");
         }
         if (!$this->db) {
-            //TODO Log 数据库连接出错
-            echo '数据库连接出错';
-            exit;
+            //TODO Log
+            // echo '数据库连接出错';
+            // exit;
+			$this->halt("DatabaseFailToConnect");
         }
 	}
 

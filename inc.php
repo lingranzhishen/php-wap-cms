@@ -6,13 +6,13 @@ include APP_PATH.'/config.php';
 $_tiger = new Tiger();
 
 /* ÓÅÏÈ¼¶
- * 1ÅäÖÃ£¬2ÓïÑÔ£¬3´íÎó
+ * 1ÅäÖÃ
  */
 
 $_tiger->setConfig($_config);
+$_tiger->setHalt("handleErrorFuncForTiger");
 
 $_lang = $_tiger->lang(true);
-$_lang->setFuncErr("handleErrorFuncForTiger");
 
 function handleErrorFuncForTiger($msg, $isI18nMsg = false){
 	global $_tiger, $_lang;

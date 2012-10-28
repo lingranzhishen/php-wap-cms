@@ -3,21 +3,19 @@
  * Tiger 语言类
  */
 
-class Tiger_lang{
+class Tiger_lang extends Tiger_base{
 
 	private static $lang = null;
 	private static $local = null;
-	private static $funcErr = null;
 
 	function __construct($local = 'en') {
 		$this->lang = array();
 		$this->local = $local;
 		$this->lang[$local] = array();
-		$this->funcErr = "";
 	}
 	
 	function locale($local){
-		if(!array_key_exists($local, $this->lang)){
+		if(!isset($this->lang[$local])){
 			$this->lang[$local] = array();
 		}
 		$this->local = $local;
@@ -26,7 +24,7 @@ class Tiger_lang{
 	function set($langArray, $local = ''){
 		if(!is_array($langArray)){
 			//TODO
-			$this->callError("ParamMustBeArray", true);
+			$this->Halt("ParamMustBeArray", true);
 		}
 		
 		if(!$local){
@@ -47,28 +45,16 @@ class Tiger_lang{
 		if(!$local){
 			$local = $this->local;
 		}else{
-			if(!array_key_exists($local, $this->lang)){
+			if(!isset($this->lang[$local])){
 				return null;
 			}
 		}
-		if(!array_key_exists($key, $this->lang[$local])){
+		if(!isset($this->lang[$local])){
 			return null;
 		}
 		return $this->lang[$local][$key];
 	}
 	
-	function setFuncErr($funcName){
-		if(function_exists($funcName)){
-			$this->funcErr = $funcName;
-		}
-	}
-	
-	private function callError($msg, $isI18nMsg = false){
-		if (!$this->funcErr){
-			die($msg);
-		}
-		call_user_func($this->funcErr, $msg, $isI18nMsg);
-	}
 	
 }
 
