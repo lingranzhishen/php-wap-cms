@@ -10,14 +10,20 @@ if(version_compare(PHP_VERSION,'5.0.0','<') ) {
     die('require PHP 5.0+ ');
 }
 
+$tiger_tmp = __FILE__;
 
+if (!$tiger_tmp) die('__FILE__ is undefined ');
 if(!defined('TIGER_PATH')){
-    define('TIGER_PATH', dirname(__FILE__));
+    define('TIGER_PATH', dirname($tiger_tmp));
 }
 
+$tiger_tmp = $_SERVER['SCRIPT_FILENAME'];
+if (!$tiger_tmp) die('SCRIPT_FILENAME is undefined ');
 if(!defined('APP_PATH')){
-    define('APP_PATH', dirname($_SERVER['SCRIPT_FILENAME']));
+    define('APP_PATH', dirname($tiger_tmp));
 }
+
+unset($tiger_tmp);
 
 //引进文件
 include 'include.php';

@@ -12,32 +12,65 @@
  * @author    Vicky
  * @version   $Id$
  */
-abstract class Base
-{
+abstract class Tiger_base {
 
-    /**
-     * 自动变量设置
-     * @access public
-     * @param $name 属性名称
-     * @param $value  属性值
-     */
-    public function __set($name, $value) {
-        if(property_exists($this, $name)){
-            $this->$name = $value;
-        }
-    }
+	protected static $_haltFunc = null;
+	
 
-    /**
-     * 自动变量获取
-     * @access public
-     * @param $name 属性名称
-     * @return mixed
+	/**
+     * 中断函数
+     * @access protected
+     * @param $msg 打印信息
      */
-    public function __get($name) {
-        if(isset($this->$name)){
-            return $this->$name;
-        }else {
-            return null;
-        }
-    }
+	protected function halt($msg){
+		if (!isset($this->_haltFunc)){
+			die($msg);
+		}
+		$params = func_get_args();
+		call_user_func_array($this->_haltFunc, $params);
+		exit;
+	}
+	
+	/**
+     * 修改中断函数
+     * @access public
+     * @param $msg 打印信息
+	 * @return boolean 修改是否成功
+     */
+	public function setHalt($funcName){
+		if(function_exists($funcName)){
+			$this->_haltFunc = $funcName;
+			return true;
+		}
+		return false;
+	}
+	
+	
+	
+    // /**
+     // * 自动变量设置
+     // * @access public
+     // * @param $name 属性名称
+     // * @param $value  属性值
+     // */
+    // public function __set($name, $value) {
+        // if(property_exists($this, $name)){
+            // $this->$name = $value;
+        // }
+    // }
+
+    // /**
+     // * 自动变量获取
+     // * @access public
+     // * @param $name 属性名称
+     // * @return mixed
+     // */
+    // public function __get($name) {
+        // if(isset($this->$name)){
+            // return $this->$name;
+        // }else {
+            // return null;
+        // }
+    // }
+	
 }
