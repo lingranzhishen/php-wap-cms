@@ -5,11 +5,11 @@ include 'inc.php';
 
 header('Content-Type: text/html; charset=utf-8');
 
-$_lang->set("");
-
 echo $_lang->get("ParamMustBeArray") . "<br/>";
 
 $a = $_tiger->db();
+
+// $_lang->set("");
 
 print_r ($a->getOne("select now()"));
 
