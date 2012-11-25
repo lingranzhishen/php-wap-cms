@@ -45,6 +45,29 @@ abstract class Tiger_base {
     }
     return false;
   }
+  
+  /**
+   * 修改开发状态
+   * @param boolean $bool 
+   */
+  public function setDebugMode($bool){
+    if($bool){
+      $this->_debugMode = true;
+    }else{
+      $this->_debugMode = false;
+    }
+  }
+  
+  /**
+   * 获取开发状态
+   * @return boolean 
+   */
+  public function getDebugMode(){
+    if(isset($this->_debugMode)){
+      return $this->_debugMode;
+    }
+    return false;
+  }
 
   // /**
   // * 自动变量设置
