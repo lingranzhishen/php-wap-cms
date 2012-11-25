@@ -8,19 +8,24 @@ if(version_compare(PHP_VERSION,'5.2.0','<') ) {
 	include TIGER_PATH.'/common/compat.php';
 }
 
-/*
- * 引进系统类
- */
+/* 引进系统函数 */
+require TIGER_PATH. '/common/include.php';
+
+
+/* 引进系统类 */
 
 //引进核心类
-include TIGER_PATH.'/core/Base.php';	//1
-include TIGER_PATH.'/core/Error.php';	//10
-include TIGER_PATH.'/core/Lang.php';	//20
+require TIGER_PATH.'/core/Base.php';	//1
+require TIGER_PATH.'/core/Error.php';	//10
+require TIGER_PATH.'/core/Lang.php';	//20
+
+require TIGER_PATH.'/core/Template.php';//200
+
 
 //引进数据库类
-include TIGER_PATH.'/db/DB.php';
+require TIGER_PATH.'/db/DB.php';
 
-
+$_tiger_mami = Tiger_mountain::findTiger();
 
 class Tiger_mountain{
 
@@ -29,6 +34,7 @@ class Tiger_mountain{
 	private static $_db = null;
 	private static $_error = null;
 	private static $_lang = null;
+	private static $_template = null;
 
 	private static $_config = null;
 	private static $_halt = null;
@@ -37,7 +43,7 @@ class Tiger_mountain{
 		$this->_instances = array();
 	}
 	
-	public static function init(){
+	public static function findTiger(){
         if(!isset(self::$_instance)){
             $cls = __CLASS__;
             self::$_instance = new $cls;
@@ -124,6 +130,17 @@ class Tiger_mountain{
 			$this->_lang->locale($lang);
 			$this->_lang->set($_lang, $lang);
 		}
+	}
+	
+	function template(){
+		if (!isset($this->_template)){
+			$this->_template = new Tiger_template();
+			$this->_instances[] = &$this->_template;
+			if (isset($this->_halt)){
+				$this->_template->setHalt($this->_halt);
+			}
+		}
+		return $this->_template;
 	}
 
 }
