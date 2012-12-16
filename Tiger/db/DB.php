@@ -138,6 +138,16 @@ class Tiger_db extends Tiger_base {
     $one = $this->db->getOne($sql);
     return $one;
   }
+  
+  /**
+   * 查询一条记录集
+   * @param String $sql 执行一条SQL语句
+   * @return array 一条记录集
+   */
+  function getRow($sql){
+	$rs = $this->db->getRow($sql);
+	return $rs;
+  }
 
   /**
    * 取得上一步 INSERT 操作产生的 ID

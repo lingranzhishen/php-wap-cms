@@ -40,7 +40,7 @@ class Tiger_mountain{
 	private static $_halt = null;
 
 	private function __construct(){
-		$this->_instances = array();
+		self::$_instances = array();
 	}
 	
 	public static function findTiger(){
@@ -56,18 +56,18 @@ class Tiger_mountain{
     }
 
 	function setConfig($config){
-		$this->_config = $config;
+		self::$_config = $config;
 	}
 	
 	function getConfig(){
-		return $this->_config;
+		return self::$_config;
 	}
 	
 	function setHalt($funcName){
 		if(function_exists($funcName)){
-			$this->_halt = $funcName;
-			if(isset($this->_instances)){
-				foreach($this->_instances as &$instance){
+			self::$_halt = $funcName;
+			if(isset(self::$_instances)){
+				foreach(self::$_instances as &$instance){
 					$instance->setHalt($funcName);
 				}
 			}
@@ -75,72 +75,75 @@ class Tiger_mountain{
 	}
 	
 	function db($autoConnect = true){
-		if (!isset($this->_db)){
-			$this->_db = new Tiger_db();
+		if (!isset(self::$_db)){
+			self::$_db = new Tiger_db();
 			if (true === $autoConnect){
-				$conf = $this->_config['db'];
-				$this->_db->connect($conf['host'], $conf['user'], $conf['pwd'], $conf['db_name'], $conf['char']);
+				$conf = self::$_config['db'];
+				self::$_db->connect($conf['host'], $conf['user'], $conf['pwd'], $conf['db_name'], $conf['char']);
 			}
-			$this->_instances[] = &$this->_db;
-			if (isset($this->_halt)){
-				$this->_db->setHalt($this->_halt);
+			self::$_instances[] = &self::$_db;
+			if (isset(self::$_halt)){
+				self::$_db->setHalt(self::$_halt);
 			}
 		}
-		return $this->_db;
+		return self::$_db;
 	}
 	
 	function database(){
 		$db = new Tiger_db();
-		$this->_instances[] = &$db;
-		if (isset($this->_halt)){
-			$db->setHalt($this->_halt);
+		self::$_instances[] = &$db;
+		if (isset(self::$_halt)){
+			$db->setHalt(self::$_halt);
 		}
 		return $db;
 	}
 	
 	function error(){
-		if (!isset($this->_error)){
-			$this->_error = new Tiger_error();
+		if (!isset(self::$_error)){
+			self::$_error = new Tiger_error();
 		}
-		return $this->_error;
+		return self::$_error;
 	}
 
 	function lang($autoSet = true){
-		if (!isset($this->_lang)){
-			$this->_lang = new Tiger_lang();
+		if (!isset(self::$_lang)){
+			self::$_lang = new Tiger_lang();
 			if (true === $autoSet){
-				$lang = $this->_config['lang'];
-				$this->includeLangFile($lang);
+				$lang = self::$_config['lang'];
+				self::includeLangFile($lang);
 			}
-			$this->_instances[] = &$this->_lang;
-			if (isset($this->_halt)){
-				$this->_lang->setHalt($this->_halt);
+			self::$_instances[] = &self::$_lang;
+			if (isset(self::$_halt)){
+				self::$_lang->setHalt(self::$_halt);
 			}
 		}
 		if (is_string($lang = $autoSet)){
-			$this->includeLangFile($lang);
+			self::includeLangFile($lang);
 		}
-		return $this->_lang;
+		return self::$_lang;
 	}
 	
 	private function includeLangFile($lang){
 		$php = TIGER_PATH."/lang/$lang.php";
 		if(file_exists($php)){
 			include_once $php;
-			$this->_lang->locale($lang);
-			$this->_lang->set($_lang, $lang);
+			self::$_lang->locale($lang);
+			self::$_lang->set($_lang, $lang);
 		}
 	}
 	
-	function template(){
-		if (!isset($this->_template)){
-			$this->_template = new Tiger_template();
-			$this->_instances[] = &$this->_template;
-			if (isset($this->_halt)){
-				$this->_template->setHalt($this->_halt);
+	function template($autoSet = true){
+		if (!isset(self::$_template)){
+			self::$_template = new Tiger_template();
+			if (true === $autoSet){
+				self::$_template->setOptions(self::$_config['template']);
+			}
+			self::$_instances[] = &self::$_template;
+			if (isset(self::$_halt)){
+				self::$_template->setHalt(self::$_halt);
 			}
 		}
-		return $this->_template;
+		return self::$_template;
 	}
 
 }

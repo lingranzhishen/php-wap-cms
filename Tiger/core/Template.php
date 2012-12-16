@@ -1,8 +1,5 @@
 <?php
 
-if(!defined('DIR_SEP')) {
-    define('DIR_SEP', DIRECTORY_SEPARATOR);
-}
 
 /**
  * Tiger 模板操作类
@@ -30,14 +27,14 @@ class Tiger_template extends Tiger_base {
      * @return void
      */
     function __construct() {
-        $this->_options = array(
-            'template_dir' => 'templates'.DIR_SEP,  // The name of the directory where templates are located
-            'cache_dir' => 'cache'.DIR_SEP,         // The name of the directory for cache files
-            'left_delimiter' => '{',                // The left delimiter used for the template tags
-            'right_delimiter' => '}',               // The right delimiter used for the template tags
-            'compile_check' => true,                // This tells Tiger_template whether to check for recompiling or not
-            'cache_lifetime' => 0                   // Number of seconds cached content will persist, 0 = never expires
-        );
+			$this->_options = array(
+				'template_dir' => TIGER_PATH. DIR_SEP .'template'.DIR_SEP,  // The name of the directory where templates are located
+				'cache_dir' => TIGER_PATH. DIR_SEP .'template'. DIR_SEP .'cache'.DIR_SEP, // The name of the directory for cache files
+				'delimiter_left' => '{',                // The left delimiter used for the template tags
+				'delimiter_right' => '}',               // The right delimiter used for the template tags
+				'compile_check' => true,                // This tells Tiger_template whether to check for recompiling or not
+				'cache_lifetime' => 0                   // Number of seconds cached content will persist, 0 = never expires
+			);       
     }     
   
     
@@ -79,11 +76,11 @@ class Tiger_template extends Tiger_base {
     			chmod($value, 0777);
     			$this->_options['cache_dir'] = $value;
     			break;
-    		case 'left_delimiter':
-    			$this->_options['left_delimiter'] = preg_quote($value);
+    		case 'delimiter_left':
+    			$this->_options['delimiter_left'] = preg_quote($value);
     			break;
-    		case 'right_delimiter':
-    			$this->_options['right_delimiter'] = preg_quote($value);
+    		case 'delimiter_right':
+    			$this->_options['delimiter_right'] = preg_quote($value);
     			break;    			
     		case 'compile_check':
     			$this->_options['compile_check'] = (boolean) $value;
@@ -95,7 +92,6 @@ class Tiger_template extends Tiger_base {
     			$this->throwException("Unknown config option \"$name\"");
     	}
     }    
-
   
     /**
      * throw a new exception with message
@@ -184,7 +180,7 @@ class Tiger_template extends Tiger_base {
         $template = preg_replace("/\{\*.*?\*\}/ies", "", $template);//TMP should do super parentheses matching?
 				
         $template = preg_replace(
-        	"/".$this->_options['left_delimiter']."(.+?)".$this->_options['right_delimiter']."/s", 
+        	"/".$this->_options['delimiter_left']."(.+?)".$this->_options['delimiter_right']."/s", 
         	"{\\1}", 
         	$template
         );

@@ -1,5 +1,7 @@
 <?
 
+// error_reporting (E_ERROR);
+
 require 'Tiger/Tiger.php';
 include APP_PATH . '/config.php';
 
@@ -14,7 +16,7 @@ $_tiger->setHalt("handleErrorFuncForTiger");
 
 $_lang = $_tiger->lang(true);
 
-function handleErrorFuncForTiger($msg, $isI18nMsg = false) {
+function handleErrorFuncForTiger($msg, $isI18nMsg = false, $level = 0) {
   global $_tiger, $_lang;
   $c = $_tiger->error();
   if (true === $isI18nMsg) {
