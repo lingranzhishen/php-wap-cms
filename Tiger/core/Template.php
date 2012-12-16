@@ -14,15 +14,15 @@ class Tiger_template extends Tiger_base {
 
     /**
      * the config options of Tiger_template Class
-     * 
+     *
      * @var array
      * @access private
      */
     private $_options = array();
-    
+
     /**
      * the class constructor
-     * 
+     *
      * @access private
      * @return void
      */
@@ -34,14 +34,14 @@ class Tiger_template extends Tiger_base {
 				'delimiter_right' => '}',               // The right delimiter used for the template tags
 				'compile_check' => true,                // This tells Tiger_template whether to check for recompiling or not
 				'cache_lifetime' => 0                   // Number of seconds cached content will persist, 0 = never expires
-			);       
-    }     
-  
-    
+			);
+    }
+
+
     /**
      * set the config options of Tiger_template by array
-     * 
-     * @param array $options 
+     *
+     * @param array $options
      * @access public
      * @return void
      */
@@ -50,12 +50,12 @@ class Tiger_template extends Tiger_base {
             $this->set($name, $value);
         }
     }
-    
+
     /**
      * assign value to the given option
-     * 
-     * @param string $name 
-     * @param mixed $value 
+     *
+     * @param string $name
+     * @param mixed $value
      * @access public
      * @return void
      */
@@ -81,7 +81,7 @@ class Tiger_template extends Tiger_base {
     			break;
     		case 'delimiter_right':
     			$this->_options['delimiter_right'] = preg_quote($value);
-    			break;    			
+    			break;
     		case 'compile_check':
     			$this->_options['compile_check'] = (boolean) $value;
     			break;
@@ -91,12 +91,12 @@ class Tiger_template extends Tiger_base {
     		default:
     			$this->throwException("Unknown config option \"$name\"");
     	}
-    }    
-  
+    }
+
     /**
      * throw a new exception with message
-     * 
-     * @param string $msg 
+     *
+     * @param string $msg
      * @access protected
      * @return void
      */
@@ -104,11 +104,11 @@ class Tiger_template extends Tiger_base {
         // throw new Exception($msg);
 		$this->halt($msg);
     }
-    
+
     /**
      * trim path according to OS (Windows or Unix)
-     * 
-     * @param string $path 
+     *
+     * @param string $path
      * @access protected
      * @return void
      */
@@ -118,8 +118,8 @@ class Tiger_template extends Tiger_base {
 
     /**
      * get the absolute path of this template
-     * 
-     * @param string $tpl 
+     *
+     * @param string $tpl
      * @access protected
      * @return void
      */
@@ -131,8 +131,8 @@ class Tiger_template extends Tiger_base {
 
     /**
      * get the absolute path of cache file for the given template
-     * 
-     * @param string $tpl 
+     *
+     * @param string $tpl
      * @access protected
      * @return void
      */
@@ -140,14 +140,14 @@ class Tiger_template extends Tiger_base {
         $cache_file = $tpl.'.php';
 				$cache_file="cache_".basename($cache_file);//patch by wjc
         return $this->trimPath($this->_options['cache_dir'].DIR_SEP.$cache_file);
-    }     
+    }
 
     /**
      * check cached content for the given template whether to recompile or not
-     * 
-     * @param string $tpl 
-     * @param string $md5_data 
-     * @param integer $expire_time 
+     *
+     * @param string $tpl
+     * @param string $md5_data
+     * @param integer $expire_time
      * @access public
      * @return void
      */
@@ -162,8 +162,8 @@ class Tiger_template extends Tiger_base {
 
     /**
      * parse the template & replace the template tags
-     * 
-     * @param string $tpl 
+     *
+     * @param string $tpl
      * @access public
      * @return void
      */
@@ -178,15 +178,13 @@ class Tiger_template extends Tiger_base {
         $template = file_get_contents($tpl_path);
 
         $template = preg_replace("/\{\*.*?\*\}/ies", "", $template);//TMP should do super parentheses matching?
-				
+
         $template = preg_replace(
-        	"/".$this->_options['delimiter_left']."(.+?)".$this->_options['delimiter_right']."/s", 
-        	"{\\1}", 
+        	"/".$this->_options['delimiter_left']."(.+?)".$this->_options['delimiter_right']."/s",
+        	"{\\1}",
         	$template
         );
-        
-        $template = preg_replace("/\{lang\s+(.+?)\}/ies", "languagevar('\\1')", $template);
-				//$template = preg_replace("/\{(I18N_.+?)\s*\}/ies", "\\1", $template);
+
         $template = preg_replace("/\{filetime\s+(.+?)\}/is", "<?php echo filetime('\\1'); ?>", $template);
 
         $template = str_replace("{LF}", "<?=\"\\n\"?>", $template);
@@ -195,6 +193,13 @@ class Tiger_template extends Tiger_base {
         $template = preg_replace("/\{(\\\$[a-zA-Z0-9_\[\]\'\"\$\.\x7f-\xff]+)\}/s", "<?=\\1?>", $template);
         $template = preg_replace("/$var_regexp/es", "addquote('<?=\\1?>')", $template);
         $template = preg_replace("/\<\?\=\<\?\=$var_regexp\?\>\?\>/es", "addquote('<?=\\1?>')", $template);
+
+        $template = preg_replace("/\{lang\s+(.+?)\}/is",
+			"<?php echo $"."GLOBALS['_tiger_mami']->lang()->get('"."\\1"."'); ?>",
+			$template
+		);
+
+		$template = preg_replace("/\{language\s+(.+?)\}/ies", "languagevar('\\1')", $template);
 
         $template = preg_replace(
             "/[\n\r\t]*\{inc\s+([a-z0-9_]+)\}[\n\r\t]*/is",
@@ -208,23 +213,23 @@ class Tiger_template extends Tiger_base {
         );
 
         $template = preg_replace(
-            "/[\n\r\t]*\{eval\s+(.+?)\}[\n\r\t]*/ies", 
-            "stripvtags('<? \\1 ?>','')", 
+            "/[\n\r\t]*\{eval\s+(.+?)\}[\n\r\t]*/ies",
+            "stripvtags('<? \\1 ?>','')",
             $template
         );
         $template = preg_replace(
-            "/[\n\r\t]*\{echo\s+(.+?)\}[\n\r\t]*/ies", 
-            "stripvtags('<? echo \\1; ?>','')", 
+            "/[\n\r\t]*\{echo\s+(.+?)\}[\n\r\t]*/ies",
+            "stripvtags('<? echo \\1; ?>','')",
             $template
         );
         $template = preg_replace(
-        	"/([\n\r\t]*)\{elseif\s+(.+?)\}([\n\r\t]*)/ies", 
+        	"/([\n\r\t]*)\{elseif\s+(.+?)\}([\n\r\t]*)/ies",
         	"stripvtags('\\1<? } elseif(\\2) { ?>\\3','')",
             $template
         );
         $template = preg_replace(
-            "/([\n\r\t]*)\{else\}([\n\r\t]*)/is", 
-            "\\1<? } else { ?>\\2", 
+            "/([\n\r\t]*)\{else\}([\n\r\t]*)/is",
+            "\\1<? } else { ?>\\2",
             $template
         );
 
@@ -279,13 +284,13 @@ class Tiger_template extends Tiger_base {
                   ."$"."GLOBALS['_tiger_mami']->template()->checkCache('$tpl', '$md5_data', $expire_time); \r\n"
                   ."//\r\n?>\r\n$template";
 
-        return $template;          
+        return $template;
     }
-     
+
     /**
      * test to see if valid cache exists for this template
-     * 
-     * @param string $tpl 
+     *
+     * @param string $tpl
      * @access public
      * @return void
      */
@@ -306,7 +311,7 @@ class Tiger_template extends Tiger_base {
       }
 
       $lmt = filemtime($tpl_path);
-      
+
       $cache_path = $this->getCachePath($tpl);
       $template = file_get_contents($cache_path);
       //alert($template);
@@ -320,13 +325,13 @@ class Tiger_template extends Tiger_base {
       //反正1秒对于人类编程的速度来说是绝对没问题的
       if ($lmt - $cacheLmt > 1 || $lmt - $cacheLmt < -1) return true;
       return false;
-      
+
     }
-    
+
     /**
      * executes & returns the cache path for the given template
-     * 
-     * @param string $tpl 
+     *
+     * @param string $tpl
      * @access public
      * @return void
      */
@@ -342,37 +347,37 @@ class Tiger_template extends Tiger_base {
           }
         }
         return $cache_path;
-    }    
-    
+    }
+
     /**
      * compile & save cached content for the given template
-     * 
-     * @param string $tpl 
+     *
+     * @param string $tpl
      * @access public
      * @return void
      */
     public function saveCache($tpl) {
     	$template = $this->parseTemplate($tpl);
         $cache_path = $this->getCachePath($tpl);
-        file_put_contents($cache_path, $template);        
+        file_put_contents($cache_path, $template);
     }
-        
+
     /**
      * clear cached content for the given template if cache file exists
-     * 
-     * @param string $tpl 
+     *
+     * @param string $tpl
      * @access public
      * @return void
      */
     public function clearCache($tpl) {
     	if($this->isCached($tpl)) {
     		@unlink($this->getCachePath($tpl));
-    	} 
+    	}
     }
-          
+
     /**
      * clear the entire contents of cache (all templates)
-     * 
+     *
      * @access public
      * @return void
      */
