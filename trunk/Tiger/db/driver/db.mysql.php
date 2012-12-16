@@ -159,12 +159,18 @@ class Tiger_mysql extends Tiger_sql {
     }
     return array_shift($row);
   }
+  
+  function getRow($sql){
+	$this->execute($sql);
+    $row = $this->fetchArray(MYSQL_ASSOC);
+    return $row;
+  }
 
   function getArray($sql) {
     $this->execute($sql);
     return $this->getRows();
   }
-
+  
   //服务端消耗接近getArray()
   function getArrayX($sql) {
     $this->execute($sql);

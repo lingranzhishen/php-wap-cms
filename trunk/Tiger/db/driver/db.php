@@ -51,6 +51,8 @@ abstract class Tiger_sql {
   abstract protected function getRowsX();
 
   abstract protected function getOne($sql);
+  
+  abstract protected function getRow($sql);
 
   abstract protected function getArray($sql);
 
