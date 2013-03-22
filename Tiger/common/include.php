@@ -12,13 +12,6 @@ function addquote($var) {
 }
 
 function languagevar($var = '') {
-	/*
-	if(isset($GLOBALS['language'][$var])) {
-		return $GLOBALS['language'][$var];
-	} else {
-		return "!$var!";
-	}
-	*/
 	return $GLOBALS['_tiger_mami']->lang()->get($var);
 }
 

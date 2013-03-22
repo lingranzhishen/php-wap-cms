@@ -108,7 +108,7 @@ class Tiger_mountain {
       self::$_lang = new Tiger_lang();
       if (true === $autoSet) {
         $lang = self::$_config['lang'];
-        self::_loadLang($lang);
+        self::_loadLang($lang['local'], $lang['path']);
       }
       self::$_instances[] = &self::$_lang;
       if (isset(self::$_halt)) {
@@ -121,12 +121,14 @@ class Tiger_mountain {
     return self::$_lang;
   }
 
-  private function _loadLang($lang) {
-    $php = TIGER_PATH . "/lang/$lang.php";
+  private function _loadLang($local, $path) {
+    $php = APP_PATH . "/$path/" . $local . ".php";
     if (file_exists($php)) {
-      include_once $php;
-      self::$_lang->locale($lang);
-      self::$_lang->set($_lang, $lang);
+      $lang = include_once $php;
+      if ($lang) {
+        self::$_lang->locale($local);
+        self::$_lang->set($lang, $local);
+      }
     }
   }
 

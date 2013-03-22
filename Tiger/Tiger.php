@@ -31,12 +31,19 @@ define('DIR_SEP', DIRECTORY_SEPARATOR);
 //引进文件
 include 'include.php';
 
-//TODO 
+//TODO
 
 class Tiger extends Tiger_mountain {
 
+  private $ver = null;
+
   function __construct() {
+    $this->ver = 1;
     return Tiger_mountain::findTiger();
+  }
+
+  function getVersion(){
+    return $this->ver;
   }
 
 }
