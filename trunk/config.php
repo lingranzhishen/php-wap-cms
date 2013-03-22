@@ -12,7 +12,10 @@ $tigerControl = 'test';
 $tigerAllConfig = array(
     'default' => array(
         'time_zone' => 'PRC',
-        'lang' => 'zh-cn',
+        'lang' => array(
+            'path' => 'lang',
+            'local' =>'zh-cn',
+        ),
         'debug' => 0,
         'db' => array(
             'sql' => 'mysql',
@@ -27,13 +30,16 @@ $tigerAllConfig = array(
 			'template_dir' => 'template',
 			'delimiter_left' =>  '{',
 			'delimiter_right' =>  '}',
-			'cache_dir' => 'template_cache',
+			'cache_dir' => 'cache/template',
 			'cache_lifetime' => 0
 		)
     ),
     'test' => array(
         'time_zone' => 'PRC',
-        'lang' => 'zh-cn',
+        'lang' => array(
+            'path' => 'lang',
+            'local' =>'zh-cn',
+        ),
         'debug' => 1,
         'db' => array(
             'sql' => 'mysql',
@@ -48,7 +54,7 @@ $tigerAllConfig = array(
 			'template_dir' => 'template',
 			'delimiter_left' =>  '{',
 			'delimiter_right' =>  '}',
-			'cache_dir' => 'template_cache',
+			'cache_dir' => 'cache/template',
 			'cache_lifetime' => 0,
 			'compile_check' => true
 		)
