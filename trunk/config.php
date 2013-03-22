@@ -18,9 +18,10 @@ $tigerAllConfig = array(
             'sql' => 'mysql',
             'host' => 'localhost',
             'user' => 'root',
-            'pwd' => '123456',
+            'pwd' => '',
             'db_name' => 'test',
-            'char' => 'utf8'
+            'char' => 'utf8',
+            'pc' => false
         ),
 		'template' => array(
 			'template_dir' => 'template',
@@ -38,9 +39,10 @@ $tigerAllConfig = array(
             'sql' => 'mysql',
             'host' => 'localhost',
             'user' => 'root',
-            'pwd' => '123456',
+            'pwd' => '',
             'db_name' => 'test',
-            'char' => 'utf8'
+            'char' => 'utf8',
+            'pc' => false
         ),
 		'template' => array(
 			'template_dir' => 'template',
@@ -56,5 +58,3 @@ $tigerAllConfig = array(
 //配置
 $_config = $tigerAllConfig[$tigerControl];
 
-
-?>
