@@ -8,13 +8,17 @@
 class Tiger_mysql extends Tiger_sql {
 
   function __construct() {
-    
+
   }
 
-  function connect($host, $user, $pwd, $dbName) {
-    $this->db = mysql_connect($host, $user, $pwd, true);
+  function connect($host, $user, $pwd, $dbName = null, $pc = null) {
+    if ($pc) {
+      $this->db = mysql_pconnect($host, $user, $pwd);
+    } else {
+      $this->db = mysql_connect($host, $user, $pwd);
+    }
     if (!$this->db) {
-      //TODO 开发可见且log
+      //TODO log
       die("<b>Fatal Error:</b> " . mysql_error() . "<br/><b>Error Code:</b> " . mysql_errno() . "<br/><b>Error Tip:</b> \db\Mysql::connect($host, $dbName) Failed");
     }
     $this->selectDB($dbName);
@@ -30,17 +34,25 @@ class Tiger_mysql extends Tiger_sql {
   }
 
   function execute($sql) {
-    $rs = mysql_query($sql);
-    if (!$rs) {
-      //TODO 开发可见且log
-      die("<b>Fatal Error:</b> " . mysql_error() . "<br/><b>Error Code:</b> " . mysql_errno() . "<br/><b>Error Tip:</b> \db\Mysql::execute(\"$sql\") Failed");
+    $rs = false;
+    if ($this->db) {
+      $rs = mysql_query($sql, $this->db);
+      if (!$rs) {
+        //TODO log
+        die("<b>Fatal Error:</b> " . mysql_error() . "<br/><b>Error Code:</b> " . mysql_errno() . "<br/><b>Error Tip:</b> \db\Mysql::execute(\"$sql\") Failed");
+      }
+      $this->result = $rs;
+    }else{
+      //TODO log
+      die("<b>Fatal Error:</b> The current connection is close");
     }
-    $this->result = $rs;
     return $rs;
   }
 
   function close() {
-    mysql_close($this->db);
+    $rt = mysql_close($this->db);
+    $this->db = null;
+    return $rt;
   }
 
   function insertID() {
@@ -152,25 +164,25 @@ class Tiger_mysql extends Tiger_sql {
   }
 
   function getOne($sql) {
-    $this->execute($sql . ' limit 1');
+    $this->execute($sql);
     $row = $this->fetchRow();
-    if (count($row) > 1) {
-      //TODO Log
-    }
-    return array_shift($row);
+    //TODO log if (count($row) > 1) {}
+    $rs = array_shift($row);
+    return $rs !== null ? $rs : false;
   }
-  
-  function getRow($sql){
-	$this->execute($sql);
+
+  function getRow($sql) {
+    $this->execute($sql);
     $row = $this->fetchArray(MYSQL_ASSOC);
-    return $row;
+    return $row ? $row : false;
   }
 
   function getArray($sql) {
     $this->execute($sql);
-    return $this->getRows();
+    $rows = $this->getRows();
+    return $rows ? $rows : false;
   }
-  
+
   //服务端消耗接近getArray()
   function getArrayX($sql) {
     $this->execute($sql);
@@ -180,7 +192,7 @@ class Tiger_mysql extends Tiger_sql {
   function pageArray($sql, $size, $page, &$count) {
     if ($page > 1 && $size > 1) {
       //检查参数个数，判断是否有传 $count
-      if (($num = func_num_args()) > 3) {
+      if (func_num_args() > 3) {
         $count = $this->getCount($sql, true);
       }
 

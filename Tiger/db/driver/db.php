@@ -19,14 +19,13 @@ abstract class Tiger_sql {
   abstract protected function __construct();
 
   function __destruct() {
-    $this->close();
     $this->db = null;
     $this->db_name = null;
     $this->result = null;
     $this->count = null;
   }
 
-  abstract protected function connect($host, $user, $pwd, $dbName);
+  abstract protected function connect($host, $user, $pwd, $dbName = null, $pc = null);
 
   abstract protected function selectDB($dbName);
 
@@ -37,7 +36,7 @@ abstract class Tiger_sql {
   abstract protected function close();
 
   abstract protected function insertID();
-  
+
   abstract protected function lastInsertID();
 
   abstract protected function affectedRows();
@@ -51,7 +50,7 @@ abstract class Tiger_sql {
   abstract protected function getRowsX();
 
   abstract protected function getOne($sql);
-  
+
   abstract protected function getRow($sql);
 
   abstract protected function getArray($sql);

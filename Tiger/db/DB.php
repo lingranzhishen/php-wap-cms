@@ -36,23 +36,17 @@ class Tiger_db extends Tiger_base {
     if (file_exists($php)) {
       include_once $php;
     } else {
-      //TODO Log
-      // echo "数据库没有提供此接口：$dbType";
-      // exit;
+      //TODO Log "数据库没有提供此接口：$dbType";
       $this->halt("DatabaseHasNoTheInterface");
     }
     if (class_exists($cls))
       $this->db = new $cls();
     else {
-      //TODO Log
-      // echo '数据库操作类加载失败';
-      // exit;
+      //TODO Log '数据库操作类加载失败';
       $this->halt("DatabaseClassFailToLoad");
     }
     if (!$this->db) {
-      //TODO Log
-      // echo '数据库连接出错';
-      // exit;
+      //TODO Log '数据库连接出错';
       $this->halt("DatabaseFailToConnect");
     }
   }
@@ -64,9 +58,10 @@ class Tiger_db extends Tiger_base {
    * @param String $pwd 数据库用户密码
    * @param String $db  数据库名称
    * @param String $char 数据库编码
+   * @param Boolean $pc 是否打开长连接
    */
-  function connect($host, $user, $pwd, $db, $char) {
-    $this->db->connect($host, $user, $pwd, $db);
+  function connect($host, $user, $pwd, $db, $char, $pc = false) {
+    $this->db->connect($host, $user, $pwd, $db, $pc);
     if ($char) {
       $this->db->setCharset($char);
     }
@@ -86,18 +81,17 @@ class Tiger_db extends Tiger_base {
   /**
    * 数据库查询
    * @param String $sql 执行一条SQL语句
-   * @return Array 结果集数组
+   * @return mixed 结果集数组，没有记录返回false
    */
   function getArray($sql) {
-    $arr = $this->db->getArray($sql);
-    return $arr;
+    return $this->db->getArray($sql);
   }
 
   /**
    * 数据库查询
    * 用于发送数据，减少网络传输的数据量，客户端须做数据转换
    * @param String $sql 执行一条SQL语句
-   * @return Array 结果集特殊数组
+   * @return Array 结果集特殊数组 array('field' => array(), 'data' => array());
    */
   function getArrayX($sql) {
     $arr = $this->db->getArrayX($sql);
@@ -110,7 +104,7 @@ class Tiger_db extends Tiger_base {
    * @param Int $size 单页最大条数
    * @param Int $page 第几页
    * @param & $count 数据库总记录指针，用于返回总记录数
-   * @return Array 结果集数组
+   * @return mixed 结果集数组，没有记录返回false
    */
   function pageArray($sql, $size, $page, &$count) {
     return $this->db->pageArray($sql, $size, $page, $count);
@@ -123,7 +117,7 @@ class Tiger_db extends Tiger_base {
    * @param Int $size 单页最大条数
    * @param Int $page 第几页
    * @param & $count 数据库总记录指针，用于返回总记录数
-   * @return Array 结果集特殊数组
+   * @return Array 结果集特殊数组 array('field' => array(), 'data' => array());
    */
   function pageArrayX($sql, $size, $page, &$count) {
     return $this->db->pageArrayX($sql, $size, $page, $count);
@@ -132,35 +126,43 @@ class Tiger_db extends Tiger_base {
   /**
    * 查询一个记录值
    * @param String $sql 执行一条SQL语句
-   * @return String 一个记录值
+   * @param boolean $limit 是否只查询一条记录
+   * @return mixed 一个记录值，没有记录返回false
    */
-  function getOne($sql) {
-    $one = $this->db->getOne($sql);
-    return $one;
+  function getOne($sql, $limit = false) {
+    if($limit){
+      $sql .= " limit 1";
+    }
+    $rs = $this->db->getOne($sql);
+    return $rs;
   }
-  
+
   /**
    * 查询一条记录集
    * @param String $sql 执行一条SQL语句
-   * @return array 一条记录集
+   * @param boolean $limit 是否只查询一条记录
+   * @return mixed 一条记录集，没有记录返回false
    */
-  function getRow($sql){
+  function getRow($sql, $limit = false){
+    if($limit){
+      $sql .= " limit 1";
+    }
 	$rs = $this->db->getRow($sql);
 	return $rs;
   }
 
   /**
    * 取得上一步 INSERT 操作产生的 ID
-   * @return int 
+   * @return int
    */
   function getInsertID() {
     return $this->db->insertID();
   }
-  
+
   /**
    * 取得上一步 INSERT 操作产生的 ID，比 getInsertID 更精确，但消耗较大
    * 同时适用于“ON DUPLICATE KEY UPDATE”查询
-   * @return int 
+   * @return int
    */
   function getLastInsertID(){
     return $this->db->lastInsertID();
@@ -168,10 +170,19 @@ class Tiger_db extends Tiger_base {
 
   /**
    * 取得（本次/上一次）查询的记录数，或影响的记录数
-   * @return int 
+   * @return int
    */
   function getCount($sql = "") {
     return $this->db->getCount($sql);
   }
+
+  /**
+   * 关闭数据库
+   * @return Boolean 成功true 失败false
+   */
+  function close(){
+    return $this->db->close();
+  }
+
 
 }
