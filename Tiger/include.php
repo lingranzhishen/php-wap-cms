@@ -72,10 +72,10 @@ class Tiger_mountain {
     }
   }
 
-  function db($autoConnect = true) {
+  function db($argu = true) {
     if (!isset(self::$_db)) {
       self::$_db = new Tiger_db();
-      if (true === $autoConnect) {
+      if (true === $argu) {
         $conf = self::$_config['db'];
         self::$_db->connect($conf['host'], $conf['user'], $conf['pwd'], $conf['db_name'], $conf['char'], $conf['pc']);
       }
@@ -103,20 +103,20 @@ class Tiger_mountain {
     return self::$_error;
   }
 
-  function lang($autoSet = true) {
+  function lang($argu = true) {
+    $conf = self::$_config['lang'];
     if (!isset(self::$_lang)) {
       self::$_lang = new Tiger_lang();
-      if (true === $autoSet) {
-        $lang = self::$_config['lang'];
-        self::_loadLang($lang['local'], $lang['path']);
+      if (true === $argu) {
+        self::_loadLang($conf['local'], $conf['path']);
       }
       self::$_instances[] = &self::$_lang;
       if (isset(self::$_halt)) {
         self::$_lang->setHalt(self::$_halt);
       }
     }
-    if (is_string($lang = $autoSet)) {
-      self::_loadLang($lang);
+    if (is_string($lang = $argu)) {
+      self::_loadLang($lang, $conf['path']);
     }
     return self::$_lang;
   }
