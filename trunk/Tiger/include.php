@@ -36,9 +36,11 @@ class Tiger_mountain {
   private static $_template = null;
   private static $_config = null;
   private static $_halt = null;
+  private static $_ver = null;
 
   private function __construct() {
     self::$_instances = array();
+    self::$_ver = 1;
   }
 
   public static function findTiger() {
@@ -61,7 +63,11 @@ class Tiger_mountain {
     return self::$_config;
   }
 
-  function setHalt($funcName) {
+  function setHalt($func) {
+    tiger_halt($func);
+  }
+
+  function setHaltTotally($funcName) {
     if (function_exists($funcName)) {
       self::$_halt = $funcName;
       if (isset(self::$_instances)) {
@@ -144,6 +150,10 @@ class Tiger_mountain {
       }
     }
     return self::$_template;
+  }
+
+  function getVerion() {
+    return self::$_ver;
   }
 
 }

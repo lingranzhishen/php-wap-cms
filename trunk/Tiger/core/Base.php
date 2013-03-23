@@ -15,20 +15,21 @@
  */
 abstract class Tiger_base {
 
-  protected static $_haltFunc = null;
-  protected static $_debugMode = null;
+  protected $_haltFunc = null;
+  protected $_debugMode = null;
 
   /**
    * 中断函数
    * @access protected
    * @param $msg 打印信息
    */
-  protected function halt($msg) {
-    if (!isset($this->_haltFunc)) {
-      die("[Tiger]Fatal Error:$msg");
-    }
+  protected function halt() {
     $params = func_get_args();
-    call_user_func_array($this->_haltFunc, $params);
+    $halt = 'tiger_halt_func';
+    if (isset($this->_haltFunc)) {
+      $halt = $this->_haltFunc;
+    }
+    call_user_func_array($halt, $params);
     exit;
   }
 
@@ -45,25 +46,25 @@ abstract class Tiger_base {
     }
     return false;
   }
-  
+
   /**
    * 修改开发状态
    * @param boolean $bool 
    */
-  public function setDebugMode($bool){
-    if($bool){
+  public function setDebugMode($bool) {
+    if ($bool) {
       $this->_debugMode = true;
-    }else{
+    } else {
       $this->_debugMode = false;
     }
   }
-  
+
   /**
    * 获取开发状态
    * @return boolean 
    */
-  public function getDebugMode(){
-    if(isset($this->_debugMode)){
+  public function getDebugMode() {
+    if (isset($this->_debugMode)) {
       return $this->_debugMode;
     }
     return false;

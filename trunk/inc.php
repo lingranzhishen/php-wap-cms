@@ -1,6 +1,6 @@
-<?
+<?php
 
-// error_reporting (E_ERROR);
+error_reporting (E_ALL);
 
 require 'Tiger/Tiger.php';
 include APP_PATH . '/config.php';

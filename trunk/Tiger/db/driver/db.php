@@ -8,13 +8,13 @@
 abstract class Tiger_sql {
 
   //数据库操作实例
-  protected static $db = null;
+  protected $db = null;
   //数据库名称
-  protected static $db_name = null;
+  protected $db_name = null;
   //数据库记录集
-  protected static $result = null;
+  protected $result = null;
   //数据库记录数
-  protected static $count = 0;
+  protected $count = 0;
 
   abstract protected function __construct();
 

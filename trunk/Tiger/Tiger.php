@@ -35,15 +35,8 @@ include 'include.php';
 
 class Tiger extends Tiger_mountain {
 
-  private $ver = null;
-
   function __construct() {
-    $this->ver = 1;
     return Tiger_mountain::findTiger();
-  }
-
-  function getVersion(){
-    return $this->ver;
   }
 
 }
