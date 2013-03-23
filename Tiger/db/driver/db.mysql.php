@@ -207,7 +207,7 @@ class Tiger_mysql extends Tiger_sql {
   function pageArrayX($sql, $size, $page, &$count) {
     if ($page > 1 && $size > 1) {
       //检查参数个数，判断是否有传 $count
-      if (($num = func_num_args()) > 3) {
+      if (func_num_args() > 3) {
         $count = $this->getCount($sql, true);
       }
       $offset = ($page - 1) * $size;

@@ -1,4 +1,4 @@
-<?
+<?php
 //网站入口
 
 include 'inc.php';
