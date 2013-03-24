@@ -12,7 +12,7 @@ $_tiger = new Tiger();
  */
 
 $_tiger->setConfig($_config);
-//$_tiger->setHalt("handleErrorFuncForTiger");
+$_tiger->setHalt("handleErrorFuncForTiger");
 
 $_lang = $_tiger->lang(true);
 

@@ -11,12 +11,12 @@ $tigerControl = 'test';
 
 $tigerAllConfig = array(
     'default' => array(
+        'debug' => 0,
         'time_zone' => 'PRC',
         'lang' => array(
             'path' => 'lang',
-            'local' =>'zh-cn',
+            'local' => 'zh-cn',
         ),
-        'debug' => 0,
         'db' => array(
             'sql' => 'mysql',
             'host' => 'localhost',
@@ -26,21 +26,24 @@ $tigerAllConfig = array(
             'char' => 'utf8',
             'pc' => false
         ),
-		'template' => array(
-			'template_dir' => 'template',
-			'delimiter_left' =>  '{',
-			'delimiter_right' =>  '}',
-			'cache_dir' => 'cache/template',
-			'cache_lifetime' => 0
-		)
+        'template' => array(
+            'template_dir' => 'template',
+            'delimiter_left' => '{',
+            'delimiter_right' => '}',
+            'cache_dir' => 'cache/template',
+            'cache_lifetime' => 0
+        ),
+        'log' => array(
+            'path' => 'log'
+        ),
     ),
     'test' => array(
+        'debug' => 1,
         'time_zone' => 'PRC',
         'lang' => array(
             'path' => 'lang',
-            'local' =>'zh-cn',
+            'local' => 'zh-cn',
         ),
-        'debug' => 1,
         'db' => array(
             'sql' => 'mysql',
             'host' => 'localhost',
@@ -50,14 +53,17 @@ $tigerAllConfig = array(
             'char' => 'utf8',
             'pc' => false
         ),
-		'template' => array(
-			'template_dir' => 'template',
-			'delimiter_left' =>  '{',
-			'delimiter_right' =>  '}',
-			'cache_dir' => 'cache/template',
-			'cache_lifetime' => 0,
-			'compile_check' => true
-		)
+        'template' => array(
+            'template_dir' => 'template',
+            'delimiter_left' => '{',
+            'delimiter_right' => '}',
+            'cache_dir' => 'cache/template',
+            'cache_lifetime' => 0,
+            'compile_check' => true
+        ),
+        'log' => array(
+            'path' => 'log'
+        ),
     ),
 );
 

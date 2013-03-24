@@ -6,8 +6,8 @@
 
 class Tiger_lang extends Tiger_base {
 
-  private static $lang = null;
-  private static $local = null;
+  private $lang = null;
+  private $local = null;
 
   function __construct($local = 'en') {
     $this->lang = array();

@@ -25,10 +25,7 @@ abstract class Tiger_base {
    */
   protected function halt() {
     $params = func_get_args();
-    $halt = 'tiger_halt_func';
-    if (isset($this->_haltFunc)) {
-      $halt = $this->_haltFunc;
-    }
+    $halt = isset($this->_haltFunc) ? $this->_haltFunc : 'tiger_halt';
     call_user_func_array($halt, $params);
     exit;
   }
@@ -47,51 +44,4 @@ abstract class Tiger_base {
     return false;
   }
 
-  /**
-   * 修改开发状态
-   * @param boolean $bool 
-   */
-  public function setDebugMode($bool) {
-    if ($bool) {
-      $this->_debugMode = true;
-    } else {
-      $this->_debugMode = false;
-    }
-  }
-
-  /**
-   * 获取开发状态
-   * @return boolean 
-   */
-  public function getDebugMode() {
-    if (isset($this->_debugMode)) {
-      return $this->_debugMode;
-    }
-    return false;
-  }
-
-  // /**
-  // * 自动变量设置
-  // * @access public
-  // * @param $name 属性名称
-  // * @param $value  属性值
-  // */
-  // public function __set($name, $value) {
-  // if(property_exists($this, $name)){
-  // $this->$name = $value;
-  // }
-  // }
-  // /**
-  // * 自动变量获取
-  // * @access public
-  // * @param $name 属性名称
-  // * @return mixed
-  // */
-  // public function __get($name) {
-  // if(isset($this->$name)){
-  // return $this->$name;
-  // }else {
-  // return null;
-  // }
-  // }
 }

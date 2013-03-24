@@ -10,6 +10,10 @@ echo $_lang->get("ParamMustBeArray") . "<br/>";
 $a = $_tiger->db();
 // $_lang->set("");
 
+
+$log = $_tiger->log();
+$log->msg('hello');
+
 print_r ($a->getRow("select 8"));
 
 $_exeTime = microtime(true);
@@ -17,6 +21,7 @@ echo "<br/>load: ".($_tiger_time_load - $_tiger_time_begin)*(1000). "<br/>exe:".
 
 $t = $_tiger->template();
 include($t->fetchCache("1.html"));
+
 
 // var_dump($t);
 // echo "-----------------n------------------";

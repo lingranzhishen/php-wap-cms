@@ -18,8 +18,8 @@ require_once TIGER_PATH . '/db/driver/db.php';
 class Tiger_db extends Tiger_base {
 
   //数据库操作实例
-  private static $db = null;
-  private static $path = null;
+  private $db = null;
+  private $path = null;
 
   function __construct($dbType = 'mysql') {
     $this->path = dirname(__FILE__);

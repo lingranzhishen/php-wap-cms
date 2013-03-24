@@ -186,13 +186,13 @@ class Tiger_template extends Tiger_base {
 
     $var_regexp = "((\\\$[a-zA-Z_\x7f-\xff][a-zA-Z0-9_\x7f-\xff]*)" . "(\[[a-zA-Z0-9_\-\.\"\'\[\]\$\x7f-\xff]+\])*)";
     $template = preg_replace("/\{(\\\$[a-zA-Z0-9_\[\]\'\"\$\.\x7f-\xff]+)\}/s", "<?=\\1?>", $template);
-    $template = preg_replace("/$var_regexp/es", "addquote('<?=\\1?>')", $template);
-    $template = preg_replace("/\<\?\=\<\?\=$var_regexp\?\>\?\>/es", "addquote('<?=\\1?>')", $template);
+    $template = preg_replace("/$var_regexp/es", "tiger_addquote('<?=\\1?>')", $template);
+    $template = preg_replace("/\<\?\=\<\?\=$var_regexp\?\>\?\>/es", "tiger_addquote('<?=\\1?>')", $template);
 
     $template = preg_replace("/\{lang\s+(.+?)\}/is", "<?php echo $" . "GLOBALS['_tiger_mami']->lang()->get('" . "\\1" . "'); ?>", $template
     );
 
-    $template = preg_replace("/\{language\s+(.+?)\}/ies", "languagevar('\\1')", $template);
+    $template = preg_replace("/\{language\s+(.+?)\}/ies", "tiger_languagevar('\\1')", $template);
 
     $template = preg_replace(
             "/[\n\r\t]*\{inc\s+([a-z0-9_]+)\}[\n\r\t]*/is", "\r\n<? include($" . "GLOBALS['_tiger_mami']->template()->fetchCache('" . "\\1" . "')); ?>\r\n", $template
@@ -202,13 +202,13 @@ class Tiger_template extends Tiger_base {
     );
 
     $template = preg_replace(
-            "/[\n\r\t]*\{eval\s+(.+?)\}[\n\r\t]*/ies", "stripvtags('<? \\1 ?>','')", $template
+            "/[\n\r\t]*\{eval\s+(.+?)\}[\n\r\t]*/ies", "tiger_stripvtags('<? \\1 ?>','')", $template
     );
     $template = preg_replace(
-            "/[\n\r\t]*\{echo\s+(.+?)\}[\n\r\t]*/ies", "stripvtags('<? echo \\1; ?>','')", $template
+            "/[\n\r\t]*\{echo\s+(.+?)\}[\n\r\t]*/ies", "tiger_stripvtags('<? echo \\1; ?>','')", $template
     );
     $template = preg_replace(
-            "/([\n\r\t]*)\{elseif\s+(.+?)\}([\n\r\t]*)/ies", "stripvtags('\\1<? } elseif(\\2) { ?>\\3','')", $template
+            "/([\n\r\t]*)\{elseif\s+(.+?)\}([\n\r\t]*)/ies", "tiger_stripvtags('\\1<? } elseif(\\2) { ?>\\3','')", $template
     );
     $template = preg_replace(
             "/([\n\r\t]*)\{else\}([\n\r\t]*)/is", "\\1<? } else { ?>\\2", $template
@@ -217,13 +217,13 @@ class Tiger_template extends Tiger_base {
     $nest = 5;
     for ($i = 0; $i < $nest; $i++) {
       $template = preg_replace(
-              "/[\n\r\t]*\{loop\s+(\S+)\s+(\S+)\}[\n\r]*(.+?)[\n\r]*\{\/loop\}[\n\r\t]*/ies", "stripvtags('<? if(is_array(\\1)) { foreach(\\1 as \\2) { ?>','\\3<? } } ?>')", $template
+              "/[\n\r\t]*\{loop\s+(\S+)\s+(\S+)\}[\n\r]*(.+?)[\n\r]*\{\/loop\}[\n\r\t]*/ies", "tiger_stripvtags('<? if(is_array(\\1)) { foreach(\\1 as \\2) { ?>','\\3<? } } ?>')", $template
       );
       $template = preg_replace(
-              "/[\n\r\t]*\{loop\s+(\S+)\s+(\S+)\s+(\S+)\}[\n\r\t]*(.+?)[\n\r\t]*\{\/loop\}[\n\r\t]*/ies", "stripvtags('<? if(is_array(\\1)) { foreach(\\1 as \\2 => \\3) { ?>','\\4<? } } ?>')", $template
+              "/[\n\r\t]*\{loop\s+(\S+)\s+(\S+)\s+(\S+)\}[\n\r\t]*(.+?)[\n\r\t]*\{\/loop\}[\n\r\t]*/ies", "tiger_stripvtags('<? if(is_array(\\1)) { foreach(\\1 as \\2 => \\3) { ?>','\\4<? } } ?>')", $template
       );
       $template = preg_replace(
-              "/([\n\r\t]*)\{if\s+(.+?)\}([\n\r]*)(.+?)([\n\r]*)\{\/if\}([\n\r\t]*)/ies", "stripvtags('\\1<? if(\\2) { ?>\\3','\\4\\5<? } ?>\\6')", $template
+              "/([\n\r\t]*)\{if\s+(.+?)\}([\n\r]*)(.+?)([\n\r]*)\{\/if\}([\n\r\t]*)/ies", "tiger_stripvtags('\\1<? if(\\2) { ?>\\3','\\4\\5<? } ?>\\6')", $template
       );
     }
 
@@ -234,13 +234,13 @@ class Tiger_template extends Tiger_base {
     $template = preg_replace("/ \?\>[\n\r]*\<\? /s", " ", $template);
 
     $template = preg_replace(
-            "/\"(http)?[\w\.\/:]+\?[^\"]+?&[^\"]+?\"/e", "transamp('\\0')", $template
+            "/\"(http)?[\w\.\/:]+\?[^\"]+?&[^\"]+?\"/e", "tiger_transamp('\\0')", $template
     );
     $template = preg_replace(
-            "/\<script[^\>]*?src=\"(.+?)\".*?\>\s*\<\/script\>/ise", "stripscriptamp('\\1')", $template
+            "/\<script[^\>]*?src=\"(.+?)\".*?\>\s*\<\/script\>/ise", "tiger_stripscriptamp('\\1')", $template
     );
     $template = preg_replace(
-            "/[\n\r\t]*\{block\s+([a-zA-Z0-9_]+)\}(.+?)\{\/block\}/ies", "stripblock('\\1', '\\2')", $template
+            "/[\n\r\t]*\{block\s+([a-zA-Z0-9_]+)\}(.+?)\{\/block\}/ies", "tiger_stripblock('\\1', '\\2')", $template
     );
 
     $md5_data = md5_file($tpl_path);
