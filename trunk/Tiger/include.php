@@ -18,7 +18,8 @@ require TIGER_PATH . '/common/include.php';
 //引进核心类
 require TIGER_PATH . '/core/Base.php'; //1
 require TIGER_PATH . '/core/Error.php'; //10
-require TIGER_PATH . '/core/Lang.php'; //20
+require TIGER_PATH . '/core/Log.php'; //20
+require TIGER_PATH . '/core/Lang.php'; //30
 
 require TIGER_PATH . '/core/Template.php'; //200
 //引进数据库类
@@ -38,12 +39,14 @@ class Tiger_mountain {
   private static $_halt = null;
   private static $_ver = null;
 
+  //private static $_log = null;
+
   private function __construct() {
     self::$_instances = array();
     self::$_ver = 1;
   }
 
-  public static function findTiger() {
+  static function findTiger() {
     if (!isset(self::$_instance)) {
       $cls = __CLASS__;
       self::$_instance = new $cls;
@@ -51,11 +54,12 @@ class Tiger_mountain {
     return self::$_instance;
   }
 
-  public function __clone() {
+  function __clone() {
     die("Mountain Cannot Accommodate Two Tigers");
   }
 
   function setConfig($config) {
+    tiger_conf_load($config);
     self::$_config = $config;
   }
 
@@ -64,7 +68,7 @@ class Tiger_mountain {
   }
 
   function setHalt($func) {
-    tiger_halt($func);
+    tiger_halt_func($func);
   }
 
   function setHaltTotally($funcName) {
@@ -76,6 +80,14 @@ class Tiger_mountain {
         }
       }
     }
+  }
+
+  function getVerion() {
+    return self::$_ver;
+  }
+
+  function getInstanceNum() {
+    return count(self::$_instances);
   }
 
   function db($argu = true) {
@@ -107,6 +119,13 @@ class Tiger_mountain {
       self::$_error = new Tiger_error();
     }
     return self::$_error;
+  }
+
+  function log() {
+    $log = new Tiger_log();
+    $path = APP_PATH . '/' . self::$_config['log']['path'];
+    $log->setPath($path);
+    return $log;
   }
 
   function lang($argu = true) {
@@ -152,9 +171,4 @@ class Tiger_mountain {
     return self::$_template;
   }
 
-  function getVerion() {
-    return self::$_ver;
-  }
-
 }
-

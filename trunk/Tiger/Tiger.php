@@ -11,14 +11,10 @@ if (version_compare(PHP_VERSION, '5.0.0', '<')) {
   die('require PHP 5.0+ ');
 }
 
-if (!__FILE__)
-  die('__FILE__ is undefined ');
 if (!defined('TIGER_PATH')) {
   define('TIGER_PATH', dirname(__FILE__));
 }
 
-if (!$_SERVER['SCRIPT_FILENAME'])
-  die('SCRIPT_FILENAME is undefined ');
 if (!defined('APP_PATH')) {
   define('APP_PATH', dirname($_SERVER['SCRIPT_FILENAME']));
 }
