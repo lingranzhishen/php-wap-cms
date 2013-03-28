@@ -98,9 +98,6 @@ class Tiger_mountain {
         self::$_db->connect($conf['host'], $conf['user'], $conf['pwd'], $conf['db_name'], $conf['char'], $conf['pc']);
       }
       self::$_instances[] = &self::$_db;
-      if (isset(self::$_halt)) {
-        self::$_db->setHalt(self::$_halt);
-      }
     }
     return self::$_db;
   }
@@ -108,9 +105,6 @@ class Tiger_mountain {
   function database() {
     $db = new Tiger_db();
     self::$_instances[] = &$db;
-    if (isset(self::$_halt)) {
-      $db->setHalt(self::$_halt);
-    }
     return $db;
   }
 
@@ -136,9 +130,6 @@ class Tiger_mountain {
         self::_loadLang($conf['local'], $conf['path']);
       }
       self::$_instances[] = &self::$_lang;
-      if (isset(self::$_halt)) {
-        self::$_lang->setHalt(self::$_halt);
-      }
     }
     if (is_string($lang = $argu)) {
       self::_loadLang($lang, $conf['path']);
@@ -164,9 +155,6 @@ class Tiger_mountain {
         self::$_template->setOptions(self::$_config['template']);
       }
       self::$_instances[] = &self::$_template;
-      if (isset(self::$_halt)) {
-        self::$_template->setHalt(self::$_halt);
-      }
     }
     return self::$_template;
   }

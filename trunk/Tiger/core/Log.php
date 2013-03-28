@@ -19,14 +19,34 @@ class Tiger_log {
     $this->path = $path;
   }
 
+  function setPattern($pattern) {
+    $this->pattern = $pattern;
+  }
+
   function setCallback() {
-    
+
+  }
+
+  protected function log($msg, $pattern) {
+    $filename = $this->path . '/' . $pattern . '.log';
+    $msg = "[" . date("Y-m-d H:i:s") . "] " . $msg . "\r\n";
+    tiger_file($filename, $msg, "add");
   }
 
   function msg($msg) {
-    $filename = $this->path . '/' . $this->pattern . '.log';
-    $msg = "[" . date("Y-m-d H:i:s") . "] " . $msg . "\r\n";
-    tiger_file($filename, $msg, "add");
+    $this->log($msg, $this->pattern);
+  }
+
+  function errorlog($msg) {
+    $this->log($msg, 'error');
+  }
+
+  function accesslog($msg) {
+    $this->log($msg, 'access');
+  }
+
+  function warnlog($msg) {
+    $this->log($msg, 'warning');
   }
 
 }

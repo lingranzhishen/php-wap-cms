@@ -14,7 +14,7 @@ $_tiger = new Tiger();
 $_tiger->setConfig($_config);
 $_tiger->setHalt("handleErrorFuncForTiger");
 
-$_lang = $_tiger->lang(true);
+$_lang = $_tiger->lang();
 
 function handleErrorFuncForTiger($msg, $isI18nMsg = false, $level = 0) {
   global $_tiger, $_lang;
