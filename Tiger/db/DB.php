@@ -106,7 +106,7 @@ class Tiger_db extends Tiger_base {
    * @param & $count 数据库总记录指针，用于返回总记录数
    * @return mixed 结果集数组，没有记录返回false
    */
-  function pageArray($sql, $size, $page, &$count) {
+  function pageArray($sql, $size, $page, &$count = null) {
     return $this->db->pageArray($sql, $size, $page, $count);
   }
 
@@ -119,7 +119,7 @@ class Tiger_db extends Tiger_base {
    * @param & $count 数据库总记录指针，用于返回总记录数
    * @return Array 结果集特殊数组 array('field' => array(), 'data' => array());
    */
-  function pageArrayX($sql, $size, $page, &$count) {
+  function pageArrayX($sql, $size, $page, &$count = null) {
     return $this->db->pageArrayX($sql, $size, $page, $count);
   }
 
@@ -130,7 +130,7 @@ class Tiger_db extends Tiger_base {
    * @return mixed 一个记录值，没有记录返回false
    */
   function getOne($sql, $limit = false) {
-    if($limit){
+    if ($limit) {
       $sql .= " limit 1";
     }
     $rs = $this->db->getOne($sql);
@@ -143,12 +143,12 @@ class Tiger_db extends Tiger_base {
    * @param boolean $limit 是否只查询一条记录
    * @return mixed 一条记录集，没有记录返回false
    */
-  function getRow($sql, $limit = false){
-    if($limit){
+  function getRow($sql, $limit = false) {
+    if ($limit) {
       $sql .= " limit 1";
     }
-	$rs = $this->db->getRow($sql);
-	return $rs;
+    $rs = $this->db->getRow($sql);
+    return $rs;
   }
 
   /**
@@ -164,7 +164,7 @@ class Tiger_db extends Tiger_base {
    * 同时适用于“ON DUPLICATE KEY UPDATE”查询
    * @return int
    */
-  function getLastInsertID(){
+  function getLastInsertID() {
     return $this->db->lastInsertID();
   }
 
@@ -180,9 +180,8 @@ class Tiger_db extends Tiger_base {
    * 关闭数据库
    * @return Boolean 成功true 失败false
    */
-  function close(){
+  function close() {
     return $this->db->close();
   }
-
 
 }

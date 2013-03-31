@@ -59,9 +59,9 @@ abstract class Tiger_sql {
 
   abstract protected function fieldName();
 
-  abstract protected function pageArray($sql, $size, $page, &$count);
+  abstract protected function pageArray($sql, $size, $page, &$count = null);
 
-  abstract protected function pageArrayX($sql, $size, $page, &$count);
+  abstract protected function pageArrayX($sql, $size, $page, &$count = null);
 
   abstract protected function getCount();
 }
