@@ -191,7 +191,6 @@ class Tiger_mysql extends Tiger_sql {
 
   function pageArray($sql, $size, $page, &$count = null) {
     if ($page > 1 && $size > 1) {
-      //检查参数个数，判断是否有传 $count
       if ($count !== null) {
         $count = $this->getCount($sql, true);
       }
@@ -206,7 +205,6 @@ class Tiger_mysql extends Tiger_sql {
 
   function pageArrayX($sql, $size, $page, &$count = null) {
     if ($page > 1 && $size > 1) {
-      //检查参数个数，判断是否有传 $count
       if ($count !== null) {
         $count = $this->getCount($sql, true);
       }

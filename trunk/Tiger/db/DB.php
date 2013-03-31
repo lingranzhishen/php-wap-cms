@@ -19,10 +19,8 @@ class Tiger_db extends Tiger_base {
 
   //数据库操作实例
   private $db = null;
-  private $path = null;
 
   function __construct($dbType = 'mysql') {
-    $this->path = dirname(__FILE__);
     $this->_init($dbType);
   }
 
@@ -32,7 +30,7 @@ class Tiger_db extends Tiger_base {
 
   private function _init($dbType) {
     $cls = 'Tiger_' . $dbType;
-    $php = $this->path . '/driver/db.' . $dbType . '.php';
+    $php = TIGER_PATH . '/db/driver/db.' . $dbType . '.php';
     if (file_exists($php)) {
       include_once $php;
     } else {
