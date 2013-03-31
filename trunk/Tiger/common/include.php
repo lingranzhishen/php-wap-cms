@@ -9,20 +9,22 @@ function tiger_conf_load(array $config) {
   if (isset($config['time_zone'])) {
     date_default_timezone_set($config['time_zone']);
   }
-  if (isset($config['debug']) && $config['debug'] == 1) {
+  if (!defined('TIGER_DEBUG') && isset($config['debug']) && $config['debug'] == 1) {
     define('TIGER_DEBUG', 1);
   }
 }
 
 function tiger_debug() {
   $params = func_get_args();
-  $msg = implode(' || ', $params);
   $traces = debug_backtrace();
   $trace = array_pop($traces);
   $file = $trace['file'];
   $func = $trace['function'];
+  if ($func == 'tiger_debug') {
+    $func = '';
+  }
   $filename = 'debug.log';
-  $msg = "[" . date("m-d H:i:s") . "] File:\"" . basename($file) . "\" Function:\"" . $func . "\" Message:" . $msg . "\r\n";
+  $msg = "[" . date("m-d H:i:s") . "] File:\"" . basename($file) . "\" Function:\"" . $func . "\" Message:" . json_encode($params) . "\r\n";
   tiger_file($filename, $msg, 'add');
 }
 

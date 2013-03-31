@@ -8,7 +8,7 @@
 class Tiger_mysql extends Tiger_sql {
 
   function __construct() {
-
+    
   }
 
   function connect($host, $user, $pwd, $dbName = null, $pc = null) {
@@ -42,7 +42,7 @@ class Tiger_mysql extends Tiger_sql {
         die("<b>Fatal Error:</b> " . mysql_error() . "<br/><b>Error Code:</b> " . mysql_errno() . "<br/><b>Error Tip:</b> \db\Mysql::execute(\"$sql\") Failed");
       }
       $this->result = $rs;
-    }else{
+    } else {
       //TODO log
       die("<b>Fatal Error:</b> The current connection is close");
     }
@@ -189,10 +189,10 @@ class Tiger_mysql extends Tiger_sql {
     return $this->getRowsX();
   }
 
-  function pageArray($sql, $size, $page, &$count) {
+  function pageArray($sql, $size, $page, &$count = null) {
     if ($page > 1 && $size > 1) {
       //检查参数个数，判断是否有传 $count
-      if (func_num_args() > 3) {
+      if ($count !== null) {
         $count = $this->getCount($sql, true);
       }
 
@@ -204,10 +204,10 @@ class Tiger_mysql extends Tiger_sql {
     }
   }
 
-  function pageArrayX($sql, $size, $page, &$count) {
+  function pageArrayX($sql, $size, $page, &$count = null) {
     if ($page > 1 && $size > 1) {
       //检查参数个数，判断是否有传 $count
-      if (func_num_args() > 3) {
+      if ($count !== null) {
         $count = $this->getCount($sql, true);
       }
       $offset = ($page - 1) * $size;
